@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
+import Header from './Header';
 
 class App extends Component {
   render(){
     return (
-      <h1>Hello from react with hot reload </h1>
+      <div>
+        <Header />
+        <section>
+          {this.props.children}
+        </section>
+      </div>
     );
   }
 }

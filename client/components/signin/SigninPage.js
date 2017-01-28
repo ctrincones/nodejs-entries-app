@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import RegisterForm from './RegisterForm';
 import { Grid , Row, Col } from 'react-bootstrap';
 
-class RegisterPage extends Component {
+import SignInForm from './SignInForm';
+
+class SigninPage extends Component {
   render() {
     return(
       <Grid>
        <Row>
-        <Col md={6} mdOffset={3}>
-           <RegisterForm />
+        <Col md={4} mdOffset={4}>
+            <SignInForm />
         </Col>
       </Row>
      </Grid>
@@ -16,4 +17,4 @@ class RegisterPage extends Component {
   }
 }
 
-export default RegisterPage;
+export default SigninPage;

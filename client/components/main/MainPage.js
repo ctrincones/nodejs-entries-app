@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
-import './mainstyle.scss';
+import { Grid , Row, Col } from 'react-bootstrap';
+import LatestEntries from '../common/LatestEntries';
 
 class MainPage extends Component {
   render(){
     return (
-      <section>
-        <p>Body of the app</p>
-      </section>
+      <Grid>
+       <Row>
+        <Col md={8} mdOffset={2}>
+           <LatestEntries userOfEntries={"All users"} />
+        </Col>
+      </Row>
+     </Grid>
     );
   }
 }

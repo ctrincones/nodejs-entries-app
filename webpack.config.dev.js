@@ -1,6 +1,5 @@
 import path from 'path';
 import webpack from 'webpack';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 export default {
   devtools: 'eval-source-map',
@@ -15,10 +14,7 @@ export default {
   plugins: [
     new webpack.NoErrorsPlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin('client/style.css', {
-           allChunks: true
-       })
+    new webpack.HotModuleReplacementPlugin()
   ],
   module: {
     loaders: [
@@ -28,8 +24,8 @@ export default {
         loaders: [ 'react-hot','babel']
       },
       {
-        test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('css!sass')
+        test: /\.sass$/,
+        loaders: ['style', 'css', 'sass']
       }
     ]
   },

@@ -6,7 +6,11 @@ export default function (method, url,data) {
     xhr.onload = function () {
         console.log()
       if (this.status >= 200 && this.status < 300) {
-        resolve(xhr.response);
+        const dataObject = {
+          token: xhr.getResponseHeader("x-auth"),
+          data: xhr.response
+        };
+        resolve(dataObject);
       } else {
         reject({
           status: this.status,

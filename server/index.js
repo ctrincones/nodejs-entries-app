@@ -24,13 +24,16 @@ app.get('*/',(req,res) => {
 
 app.use(BodyParser.json());
 
-app.post('/api/users', (req, res) => {
+
+app.post('/api/users/register', (req, res) => {
   const requestBody = req.body;
   const newUser = new User(requestBody);
   newUser.save().then(() => {
-    res.send("User successfuly created");
-  }).catch(() => {
-    res.send("An error ocurred");
+    return newUser.generateAuthToken();
+  }).then((token) => {
+    res.header('x-auth',token).send(newUser);
+  }).catch((e) => {
+    res.status(400).send(e);
   });
 });
 

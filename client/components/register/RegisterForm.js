@@ -41,7 +41,7 @@ class RegisterForm extends Component {
           email,
           twitterusername
      };
-    makeAjaxRequest("POST","/api/users", newUser).then((data)=>{
+    makeAjaxRequest("POST","/api/users/register", newUser).then((data)=>{
        console.log(data);
      }).catch((error)=> {
        console.log(error);

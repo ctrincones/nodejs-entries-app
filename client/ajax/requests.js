@@ -1,10 +1,9 @@
 
-export default function (method, url,data) {
+export const makePostRequest = function (url,data) {
   return new Promise( function (resolve, reject) {
     const xhr = new XMLHttpRequest();
-    xhr.open(method, url,true);
+    xhr.open("POST", url,true);
     xhr.onload = function () {
-        console.log()
       if (this.status >= 200 && this.status < 300) {
         const dataObject = {
           token: xhr.getResponseHeader("x-auth"),

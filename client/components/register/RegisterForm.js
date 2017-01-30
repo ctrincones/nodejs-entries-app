@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Form, Col, FormGroup, FormControl, Button, HelpBlock } from 'react-bootstrap';
 import validator from 'validator';
-import makeAjaxRequest from '../../ajax/requests';
+import { makePostRequest } from '../../ajax/requests';
 import './styles/styles.sass';
 
 class RegisterForm extends Component {
@@ -13,18 +14,20 @@ class RegisterForm extends Component {
       password: '',
       passwordconf: '',
       twitterusername: '',
-      disallowsubmit: true
+      disallowsubmit: true,
+      loadingregistration: false
     };
     this.inputChanged = this.inputChanged.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
+  componentDidMount() {
+    console.log(this.props);
+  }
   validateInputs() {
       const { username, email, password, passwordconf, twitterusername} = this.state;
       if(username.length > 1 && validator.isEmail(email) && password === passwordconf && password.length > 1 && twitterusername.length > 1){
-        console.log("allow");
         this.setState({disallowsubmit: false});
       } else {
-        console.log("Dont allow");
         this.setState({disallowsubmit: true});
       }
   }
@@ -34,6 +37,7 @@ class RegisterForm extends Component {
   }
   onSubmit(e) {
      e.preventDefault();
+     this.setState({ loadingregistration: true });
      const { username, email, password, twitterusername } = this.state;
      const newUser = {
           username,
@@ -41,11 +45,26 @@ class RegisterForm extends Component {
           email,
           twitterusername
      };
-    makeAjaxRequest("POST","/api/users/register", newUser).then((data)=>{
-       console.log(data);
+    makePostRequest("/api/users/register", newUser).then((data)=>{
+      console.log(data);
+      this.setState({ loadingregistration: false});
      }).catch((error)=> {
        console.log(error);
+       this.setState({ loadingregistration : false});
      });
+   }
+   renderRegistrationButton () {
+     if(!this.state.loadingregistration){
+       return (
+         <Button type="submit" className="btn btn-info" disabled={this.state.disallowsubmit}>
+          Sign in
+          </Button>
+       );
+     }
+     return (
+       <i className="fa fa-circle-o-notch fa-spin registration-spinner"></i>
+
+     );
    }
   render(){
     return (
@@ -94,9 +113,7 @@ class RegisterForm extends Component {
      </FormGroup>
        <FormGroup>
         <Col smOffset={5} sm={2}>
-         <Button type="submit" className="btn btn-info" disabled={this.state.disallowsubmit}>
-          Sign in
-          </Button>
+           {this.renderRegistrationButton()}
         </Col>
        </FormGroup>
       </Form>
@@ -105,4 +122,10 @@ class RegisterForm extends Component {
   }
 }
 
-export default RegisterForm;
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth
+  };
+}
+
+export default connect(mapStateToProps)(RegisterForm);

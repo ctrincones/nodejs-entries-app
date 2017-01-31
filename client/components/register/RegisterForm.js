@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Col, FormGroup, FormControl, Button, HelpBlock } from 'react-bootstrap';
+import { Form, Col, FormGroup, FormControl, Button, HelpBlock, Alert } from 'react-bootstrap';
 import validator from 'validator';
-import { makePostRequest } from '../../ajax/requests';
+import { registrationRequest, clearNotifications } from './../../actions';
+import { browserHistory } from 'react-router';
 import './styles/styles.sass';
 
 class RegisterForm extends Component {
@@ -15,13 +16,26 @@ class RegisterForm extends Component {
       passwordconf: '',
       twitterusername: '',
       disallowsubmit: true,
-      loadingregistration: false
+      loadingregistration: false,
+      registrationerror: false
     };
     this.inputChanged = this.inputChanged.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
   componentDidMount() {
     console.log(this.props);
+  }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.auth.registrationsuccess){
+      this.setState({ loadingregistration: false });
+      this.props.clearNotifications();
+      browserHistory.push('/main');
+    }
+    if(nextProps.auth.registrationerror){
+      this.setState({ registrationerror: true });
+      this.setState({ loadingregistration: false});
+      this.props.clearNotifications();
+    }
   }
   validateInputs() {
       const { username, email, password, passwordconf, twitterusername} = this.state;
@@ -45,13 +59,7 @@ class RegisterForm extends Component {
           email,
           twitterusername
      };
-    makePostRequest("/api/users/register", newUser).then((data)=>{
-      console.log(data);
-      this.setState({ loadingregistration: false});
-     }).catch((error)=> {
-       console.log(error);
-       this.setState({ loadingregistration : false});
-     });
+     this.props.registrationRequest(newUser);
    }
    renderRegistrationButton () {
      if(!this.state.loadingregistration){
@@ -66,17 +74,27 @@ class RegisterForm extends Component {
 
      );
    }
+   renderRegistrationError() {
+     if(this.state.registrationerror){
+       return (
+         <Alert bsStyle="warning">
+            <div className="registration-error-message"><strong>Registration error</strong> please check your information.</div>
+        </Alert>
+       );
+     }
+   }
   render(){
     return (
       <section className="Register-form">
         <h3>Enter your information</h3>
+          {this.renderRegistrationError()}
         <Form horizontal onSubmit={this.onSubmit}>
         <FormGroup>
          <Col sm={4}>
           Username
          </Col>
          <Col sm={8}>
-           <FormControl type="text" placeholder="Username" name="username" onChange={this.inputChanged}/>
+           <FormControl type="text" placeholder="Username" name="username" value={this.state.username} onChange={this.inputChanged}/>
         </Col>
         </FormGroup>
         <FormGroup>
@@ -84,7 +102,7 @@ class RegisterForm extends Component {
           Email
          </Col>
          <Col sm={8}>
-           <FormControl type="email" placeholder="Email" name="email" onChange={this.inputChanged}/>
+           <FormControl type="email" placeholder="Email" name="email" value={this.state.email} onChange={this.inputChanged}/>
         </Col>
         </FormGroup>
         <FormGroup>
@@ -92,7 +110,7 @@ class RegisterForm extends Component {
          Password
          </Col>
          <Col sm={8}>
-           <FormControl type="password" placeholder="Password" name="password" onChange={this.inputChanged} />
+           <FormControl type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.inputChanged} />
          </Col>
        </FormGroup>
        <FormGroup>
@@ -100,7 +118,7 @@ class RegisterForm extends Component {
         Confirm password
         </Col>
         <Col sm={8}>
-          <FormControl type="password" placeholder="Re-enter your password" name="passwordconf" onChange={this.inputChanged} />
+          <FormControl type="password" placeholder="Re-enter your password" name="passwordconf" value={this.state.passwordconf} onChange={this.inputChanged} />
         </Col>
       </FormGroup>
       <FormGroup>
@@ -108,7 +126,7 @@ class RegisterForm extends Component {
        Twitter username
        </Col>
        <Col sm={8}>
-         <FormControl type="text" placeholder="Your twitter username" name="twitterusername" onChange={this.inputChanged} />
+         <FormControl type="text" placeholder="Your twitter username" name="twitterusername" value={this.state.twitterusername} onChange={this.inputChanged} />
        </Col>
      </FormGroup>
        <FormGroup>
@@ -128,4 +146,4 @@ const mapStateToProps = (state) => {
   };
 }
 
-export default connect(mapStateToProps)(RegisterForm);
+export default connect(mapStateToProps, { registrationRequest, clearNotifications })(RegisterForm);

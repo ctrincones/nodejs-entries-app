@@ -1,18 +1,33 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 import './styles/styles.sass';
 
-export default () => {
+class Entry extends Component {
+  renderAuthor(){
+    if(this.props.userpage){
+      return (
+        <p>Published on <time> {this.props.date}</time></p>
+      );
+    }
+    return (
+      <p>Published by <Link to={{ pathname: "userpage", query: { id: this.props.userid } }}>{this.props.username}</Link> on <time>{this.props.date}</time></p>
+    );
+  }
+  render() {
   return (
         <section>
           <header>
-            <h4 className="Entry-title"><strong>Entry title</strong></h4>
+            <h4 className="Entry-title"><strong>{this.props.title}</strong></h4>
           </header>
           <article className="Entry-content">
-            <p>Entry content</p>
+            <p>{this.props.content}</p>
           </article>
           <footer className="Entry-info">
-            <p>Published by <a href="#">Username</a> @ <time>10:00</time></p>
+           { this.renderAuthor() }
           </footer>
         </section>
   );
+ }
 }
+
+export default Entry;

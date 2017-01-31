@@ -15,6 +15,7 @@ import authenticate from './middleware/authenticate';
 import Entry from './models/entries';
 import RegisterUser from './routes/users/register';
 import LoginUser from './routes/users/login';
+import getUserData from './routes/users/getData';
 import LogoutUser from './routes/users/logout';
 import CreateEntry from './routes/entries/create';
 import GetMainPageEntries from './routes/entries/getMainPage';
@@ -44,6 +45,10 @@ app.post('/api/users/register', RegisterUser );
 
 //Log in a user
 app.post('/api/users/login', LoginUser );
+
+//get user data if its loggedin
+
+app.get('/api/user/get', authenticate, getUserData);
 
 //Log out user
 app.delete('/api/users/delete/token', authenticate, LogoutUser);

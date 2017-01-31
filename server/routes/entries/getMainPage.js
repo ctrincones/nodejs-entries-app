@@ -34,7 +34,7 @@ export default (req,res) => {
       }
 }).then((entries) => {
     const newArray =  entries.map(function(value){
-     value.lastN.formattedcreationdate = moment(value.lastN.creationdate).format('h:mm:ss');
+     value.lastN.formattedcreationdate = moment(value.lastN.creationdate).format('MMMM Do YYYY, h:mm:ss a');
      return value.lastN;
    });
    newArray.sort(function(a,b){

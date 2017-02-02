@@ -29,7 +29,6 @@ export default (req,res) => {
         const filtered =_.filter(responseArr, (item) => {
             return !(tweetsAuthor.hiddentweets.indexOf(item.id) > -1);
         });
-        console.log(filtered);
         res.send(filtered);
       } else {
         User.findByToken(token).then((userData) => {

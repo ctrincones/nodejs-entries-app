@@ -67,10 +67,8 @@ export const clearAuthState = () => {
 }
 
 export const loginUser = (data) => {
-  console.log("loggin in user");
   return (dispatch) => {
     makePostRequest("/api/users/login", data).then((response) => {
-       console.log("good response");
        const jsonParsed = JSON.parse(response.data);
        const userData = {
          token: response.token

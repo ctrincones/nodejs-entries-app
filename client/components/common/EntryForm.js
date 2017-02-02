@@ -40,8 +40,6 @@ class EntryForm extends Component {
       }
   }
   findEntryValues(list,id) {
-    console.log(id);
-    console.log(list);
     const entry = _.find(list, {'_id': id });
     this.setState({ title: entry.title, body: entry.entrybody });
   }

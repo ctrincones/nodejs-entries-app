@@ -43,7 +43,6 @@ export const getUserEntries = (userId) => {
     const url = "/api/entries/user/" + userId;
     makeGetRequest(url).then((response) => {
       const parsedResponse = JSON.parse(response.data);
-      console.log(response);
       dispatch({ type: FETCH_USER_ENTRIES_SUCCESS, payload: parsedResponse });
     }).catch((error) => {
       console.log(error);
@@ -70,7 +69,6 @@ export const hideUserTweet = (tweetid,token) => {
     makePostRequestWithToken(url,null,token).then((response) => {
       const parsedResponse = JSON.parse(response.data);
       dispatch({ type: TWEET_HIDDEN_SUCCESSFULY, payload: parsedResponse });
-      console.log(response);
     }).catch((error) => {
       console.log(error)
     });
@@ -81,7 +79,6 @@ export const hideUserTweet = (tweetid,token) => {
 export const showUserHiddenTweet = (tweetid,token) => {
   return (dispatch) => {
     const url = "/api/entries/tweets/show/" + tweetid;
-    console.log(url);
     makePostRequestWithToken(url,null,token).then((response) => {
       const parsedResponse = JSON.parse(response.data);
       dispatch({ type: TWEET_SHOWN_SUCCESSFULY, payload: parsedResponse });
@@ -97,7 +94,6 @@ export const editEntry = (data, token, entryid) => {
     const url = '/api/entries/edit/' + entryid;
     makePatchRequestWithToken(url,data,token).then((response) => {
        dispatch({ type: ENTRY_CREATE_SUCCESS });
-       console.log(response);
     }).catch((error) => {
       dispatch({ type: ENTRY_CREATE_ERROR });
       console.log(error);

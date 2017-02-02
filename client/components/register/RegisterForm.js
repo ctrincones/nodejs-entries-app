@@ -22,9 +22,7 @@ class RegisterForm extends Component {
     this.inputChanged = this.inputChanged.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
-  componentDidMount() {
-    console.log(this.props);
-  }
+
   componentWillReceiveProps(nextProps) {
     if(nextProps.auth.registrationsuccess){
       this.setState({ loadingregistration: false });
@@ -65,7 +63,7 @@ class RegisterForm extends Component {
      if(!this.state.loadingregistration){
        return (
          <Button type="submit" className="btn btn-info" disabled={this.state.disallowsubmit}>
-          Sign in
+          Register
           </Button>
        );
      }
@@ -123,7 +121,7 @@ class RegisterForm extends Component {
       </FormGroup>
       <FormGroup>
        <Col sm={4}>
-       Twitter username
+       Twitter username @
        </Col>
        <Col sm={8}>
          <FormControl type="text" placeholder="Your twitter username" name="twitterusername" value={this.state.twitterusername} onChange={this.inputChanged} />

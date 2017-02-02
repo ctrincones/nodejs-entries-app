@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Form, Col, FormGroup, FormControl, Button, Alert } from 'react-bootstrap';
-import { createEntry, clearAuthState, clearEntryCreationStatus } from './../../../actions';
+import _ from 'lodash';
+import { createEntry, clearAuthState, clearEntryCreationStatus, editEntry } from './../../actions';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import { loadUserData } from './../../../localStorage';
+import { loadUserData } from './../../localStorage';
 import './styles/styles.sass';
 
-class NewEntryForm extends Component {
+class EntryForm extends Component {
   constructor(){
     super();
     this.state = {
@@ -15,7 +16,9 @@ class NewEntryForm extends Component {
       disallowpost: true,
       sending: false,
       error: false,
-      success: false
+      success: false,
+      editpage: null,
+      entryid: null
     };
     this.inputChanged = this.inputChanged.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -29,6 +32,18 @@ class NewEntryForm extends Component {
        this.props.clearEntryCreationStatus();
        this.setState({ sending: false, title: '', body: '', error: true, success: false});
      }
+     if(nextProps.editpage){
+       this.setState({ editpage: nextProps.editpage, entryid: nextProps.entryid });
+      }
+      if(nextProps.entrieslist){
+        this.findEntryValues(nextProps.entrieslist, this.state.entryid);
+      }
+  }
+  findEntryValues(list,id) {
+    console.log(id);
+    console.log(list);
+    const entry = _.find(list, {'_id': id });
+    this.setState({ title: entry.title, body: entry.entrybody });
   }
   validateInputs() {
      if(this.state.title.length > 1 && this.state.body.length > 1){
@@ -51,7 +66,11 @@ class NewEntryForm extends Component {
         title,
         entrybody: body
       };
-    this.props.createEntry(entryData,userData.token);
+    if(this.state.editpage){
+      this.props.editEntry(entryData,userData.token, this.state.entryid);
+    } else {
+      this.props.createEntry(entryData,userData.token);
+    }
   } else {
     this.props.clearAuthState();
     browserHistory.push('/signin');
@@ -61,7 +80,7 @@ class NewEntryForm extends Component {
     if(!this.state.sending){
       return (
         <Button type="submit" className="btn btn-info">
-         Sign in
+         Save
          </Button>
       );
     }
@@ -79,18 +98,20 @@ class NewEntryForm extends Component {
     }
   }
   renderSuccess () {
+    const message = this.state.editpage ? 'edited an' : 'created a new';
     if(this.state.success){
     return (
       <Alert bsStyle="success">
-        <div className="status-message"><strong>Congratulations</strong> You have succesfuly created a new entry</div>
+        <div className="status-message"><strong>Congratulations</strong> You have succesfuly { message } entry</div>
      </Alert>
     );
      }
     }
   render(){
+    const message = this.state.editpage ? 'Edit' : 'Add';
     return(
       <section className="Newentry-form">
-        <h3>Add an entry</h3>
+        <h3>{message} an entry</h3>
         {this.renderError()}
         {this.renderSuccess()}
         <Form onSubmit={this.onSubmit} horizontal>
@@ -125,4 +146,4 @@ const mapStateToProps = (state) => {
   };
 }
 
-export default connect(mapStateToProps,{ createEntry, clearAuthState, clearEntryCreationStatus })(NewEntryForm);
+export default connect(mapStateToProps,{ createEntry, clearAuthState, clearEntryCreationStatus, editEntry })(EntryForm);

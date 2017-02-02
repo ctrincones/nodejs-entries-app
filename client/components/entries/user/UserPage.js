@@ -3,7 +3,7 @@ import { Grid , Row, Col } from 'react-bootstrap';
 import LatestEntries from './../../common/LatestEntries';
 import LatestTweets from './../../common/LatestTweets';
 import { connect } from 'react-redux';
-import { getUserEntries, getUserTweets } from './../../../actions';
+import { getUserEntries, getUserTweets, getAuthorInfo } from './../../../actions';
 import { loadUserData } from './../../../localStorage';
 
 class UserPage extends Component {
@@ -16,25 +16,40 @@ class UserPage extends Component {
     };
   }
   componentDidMount() {
-     const userId = this.props.location.query.id;
-     let token = null;
-     this.props.getUserEntries(userId);
-     const userData = loadUserData();
-     if(userData){
-       token = userData.token;
-     }
-     this.props.getUserTweets(userId,token);
+    this.loadUserData();
   }
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.entries.userentries){
       const userEntries = nextProps.entries.userentries;
-      const authorUsername = userEntries[0].authorusername;
-      this.setState({ userentries: userEntries, authorUsername });
+      this.setState({ userentries: userEntries });
     }
     if(nextProps.entries.usertweets){
       this.setState({ usertweets: nextProps.entries.usertweets });
     }
+    if(nextProps.entries.authorinfo){
+      const username = nextProps.entries.authorinfo.username;
+      this.setState({ authorUsername: username });
+    }
+    if(nextProps.location.query.id !== this.props.location.query.id){
+      this.loadUserData(nextProps.location.query.id);
+    }
+  }
+  loadUserData(newid) {
+    let userId;
+    if(newid){
+      userId = newid;
+    } else {
+      userId = this.props.location.query.id;
+    }
+    let token = null;
+    this.props.getUserEntries(userId);
+    const userData = loadUserData();
+    if(userData){
+      token = userData.token;
+    }
+    this.props.getUserTweets(userId,token);
+    this.props.getAuthorInfo(userId);
   }
   render(){
     return (
@@ -59,4 +74,4 @@ const mapStateToProps = (state) => {
   };
 }
 
-export default connect(mapStateToProps, {getUserEntries, getUserTweets })(UserPage);
+export default connect(mapStateToProps, {getUserEntries, getUserTweets, getAuthorInfo })(UserPage);

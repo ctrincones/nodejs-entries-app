@@ -147,3 +147,37 @@ export const makeGetRequest = function (url) {
     xhr.send();
   });
 }
+
+
+export const makePatchRequestWithToken = function (url,data,token) {
+  return new Promise( function (resolve, reject) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("PATCH", url,true);
+    xhr.onload = function () {
+      if (this.status >= 200 && this.status < 300) {
+        const dataObject = {
+          data: xhr.response
+        };
+         resolve(dataObject);
+      } else {
+        reject({
+          status: this.status,
+          statusText: xhr.statusText
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText
+      });
+    };
+    xhr.setRequestHeader("x-auth", token);
+    if(data){
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(JSON.stringify(data));
+    } else {
+      xhr.send();
+    }
+  });
+}

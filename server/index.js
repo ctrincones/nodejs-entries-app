@@ -24,7 +24,7 @@ import fetchUserEntries from './routes/entries/fetchUserEntries';
 import fetchUserTweets from './routes/entries/fetchUserTweets';
 import hideUserTweets from './routes/entries/hideUserTweets';
 import showUserTweet from './routes/entries/showUserTweet';
-
+import getAuthorData from './routes/entries/getAuthorData';
 //Express and webpack configs
 
 let app = express();
@@ -50,6 +50,8 @@ app.post('/api/users/login', LoginUser );
 //get user data if its loggedin
 
 app.get('/api/user/get', authenticate, getUserData);
+
+app.get('/api/user/get/author/:id', getAuthorData);
 
 //Log out user
 app.delete('/api/users/delete/token', authenticate, LogoutUser);

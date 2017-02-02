@@ -58,6 +58,7 @@ class LatestEntries extends Component {
               content={value.entrybody}
               userid={value.author}
               userpage={this.state.userpage}
+              entryid={value._id}
               />
            </ListGroupItem>
          );

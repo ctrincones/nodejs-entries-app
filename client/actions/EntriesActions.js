@@ -6,9 +6,10 @@ import {
    FETCH_USER_ENTRIES_SUCCESS,
    FETCH_TWEETS_SUCCESS,
    TWEET_HIDDEN_SUCCESSFULY,
-   TWEET_SHOWN_SUCCESSFULY
+   TWEET_SHOWN_SUCCESSFULY,
+   FETCH_AUTHOR_SUCCESS
  } from './types';
-import { makePostRequestWithToken, makeGetRequest, makeGetRequestWithToken } from './../ajax/requests';
+import { makePostRequestWithToken, makeGetRequest, makeGetRequestWithToken, makePatchRequestWithToken } from './../ajax/requests';
 
 export const createEntry = (data,token) => {
   return (dispatch) => {
@@ -42,6 +43,7 @@ export const getUserEntries = (userId) => {
     const url = "/api/entries/user/" + userId;
     makeGetRequest(url).then((response) => {
       const parsedResponse = JSON.parse(response.data);
+      console.log(response);
       dispatch({ type: FETCH_USER_ENTRIES_SUCCESS, payload: parsedResponse });
     }).catch((error) => {
       console.log(error);
@@ -85,6 +87,32 @@ export const showUserHiddenTweet = (tweetid,token) => {
       dispatch({ type: TWEET_SHOWN_SUCCESSFULY, payload: parsedResponse });
     }).catch((error) => {
       console.log(error)
+    });
+  }
+}
+
+
+export const editEntry = (data, token, entryid) => {
+    return (dispatch) => {
+    const url = '/api/entries/edit/' + entryid;
+    makePatchRequestWithToken(url,data,token).then((response) => {
+       dispatch({ type: ENTRY_CREATE_SUCCESS });
+       console.log(response);
+    }).catch((error) => {
+      dispatch({ type: ENTRY_CREATE_ERROR });
+      console.log(error);
+    });
+  }
+}
+
+export const getAuthorInfo = (authorid) => {
+  const url = '/api/user/get/author/' + authorid;
+  return (dispatch) => {
+    makeGetRequest(url).then((response) => {
+        const parsedResponse = JSON.parse(response.data);
+       dispatch({ type: FETCH_AUTHOR_SUCCESS, payload: parsedResponse });
+    }).catch((error) => {
+       console.log(error);
     });
   }
 }

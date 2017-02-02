@@ -32,10 +32,11 @@ class Header extends Component {
         </Nav>
       );
    }
-   console.log(this.props.auth.user);
    return (
      <Nav pullRight>
-     <NavItem>{this.props.auth.user.username}</NavItem>
+     <LinkContainer to={{ pathname: "userpage", query: { id: this.props.auth.user._id } }}>
+        <NavItem>{this.props.auth.user.username}</NavItem>
+    </LinkContainer>
      <LinkContainer to={{ pathname: '/signin' }}>
        <NavItem onClick={this.signOutUser}>Sign out</NavItem>
      </LinkContainer>

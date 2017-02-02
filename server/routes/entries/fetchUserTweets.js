@@ -17,6 +17,7 @@ export default (req,res) => {
       const responseArr = data.map((value) => {
         const responseObject = {
           text: value.text,
+          authorid: tweetsAuthor._id,
           id: value.id,
           user: value.user.screen_name,
           image: value.user.profile_image_url,

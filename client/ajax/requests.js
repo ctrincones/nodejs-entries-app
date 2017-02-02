@@ -53,7 +53,9 @@ export const makeGetRequestWithToken = function (url,token) {
         statusText: xhr.statusText
       });
     };
-    xhr.setRequestHeader("x-auth", token);
+    if(token){
+      xhr.setRequestHeader("x-auth", token);
+    }
     xhr.send();
   });
 }
@@ -109,9 +111,13 @@ export const makePostRequestWithToken = function (url,data,token) {
         statusText: xhr.statusText
       });
     };
-    xhr.setRequestHeader("Content-Type", "application/json");
     xhr.setRequestHeader("x-auth", token);
-    xhr.send(JSON.stringify(data));
+    if(data){
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(JSON.stringify(data));
+    } else {
+      xhr.send();
+    }
   });
 }
 

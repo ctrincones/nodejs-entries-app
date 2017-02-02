@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.toJSON = function() {
   const user = this;
   const userObject = user.toObject();
-  return _.pick(userObject,['_id', 'email','username','twitterusername']);
+  return _.pick(userObject,['_id', 'email','username','twitterusername', 'hiddentweets']);
 }
 
 userSchema.methods.generateAuthToken = function(){
@@ -67,13 +67,19 @@ userSchema.methods.addHiddenTweet = function(tweetId) {
   return user.save();
 }
 
+userSchema.methods.showHiddenTweet = function(tweetId) {
+  const user = this;
+  const tweetIndex = user.hiddentweets.indexOf(tweetId);
+  user.hiddentweets.splice(tweetIndex, 1);
+  return user.save();
+}
+
 userSchema.pre('save', function(next){
   const user = this;
   if(user.isModified('password')){
     bcrypt.genSalt(10, (err,salt) => {
       bcrypt.hash(user.password, salt, (err,hash) => {
         user.password = hash;
-        console.log("fire callback");
         next();
       });
     });

@@ -7,7 +7,9 @@ import {
   CLEAR_AUTH_STATE,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
-  ENTRY_CREATE_SUCCESS
+  ENTRY_CREATE_SUCCESS,
+  TWEET_HIDDEN_SUCCESSFULY,
+  TWEET_SHOWN_SUCCESSFULY
 } from './../actions/types';
 
 const INITIAL_STATE = {
@@ -37,6 +39,10 @@ export default ( state = INITIAL_STATE, action) => {
       return { ...state, loginsuccess: true, user: action.payload };
     case LOGIN_USER_ERROR:
       return {...state, loginerror: true};
+     case TWEET_HIDDEN_SUCCESSFULY:
+      return {...state, user: action.payload};
+     case TWEET_SHOWN_SUCCESSFULY:
+      return {...state,user: action.payload};
     default:
       return state;
   }

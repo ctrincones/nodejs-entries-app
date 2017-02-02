@@ -8,7 +8,7 @@ class LatestEntries extends Component {
   constructor() {
     super();
     this.state = {
-      itemsToDisplay : null,
+      itemsToDisplay : [],
       itemsPerPage: 3,
       activePage: 1,
       numberOfPages: 0,
@@ -25,18 +25,14 @@ class LatestEntries extends Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.data){
     const fullList = nextProps.data;
-    console.log(fullList.length);
-    console.log(this.state.itemsPerPage);
     const numberOfPages = Math.ceil(fullList.length/ this.state.itemsPerPage);
-    console.log(numberOfPages);
     const lastIndex = this.state.itemsPerPage * this.state.activePage;
-    console.log(lastIndex);
     const itemsToDisplay = nextProps.data.slice( 0, lastIndex);
     this.setState({ itemsToDisplay, numberOfPages, fullList, userpage: this.props.userpage });
     }
   }
   renderPagination() {
-    if(this.state.itemsToDisplay){
+    if(this.state.itemsToDisplay.length > 0){
       return (
       <div style={{ textAlign: "center" }}>
         <Pagination
@@ -52,8 +48,7 @@ class LatestEntries extends Component {
   }
   render(){
     let listItems;
-    if(this.state.itemsToDisplay){
-      console.log(this.props.data);
+    if(this.state.itemsToDisplay.length > 0 ){
      listItems = this.state.itemsToDisplay.map((value, index) => {
          return (
            <ListGroupItem key={index}>

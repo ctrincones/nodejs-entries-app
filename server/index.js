@@ -23,6 +23,7 @@ import EditEntry from './routes/entries/edit';
 import fetchUserEntries from './routes/entries/fetchUserEntries';
 import fetchUserTweets from './routes/entries/fetchUserTweets';
 import hideUserTweets from './routes/entries/hideUserTweets';
+import showUserTweet from './routes/entries/showUserTweet';
 
 //Express and webpack configs
 
@@ -69,6 +70,8 @@ app.get('/api/entries/user/:id', fetchUserEntries);
 app.get('/api/entries/user/tweets/:id', fetchUserTweets );
 //hide tweets from user
 app.post('/api/entries/tweets/hide/:id', authenticate, hideUserTweets );
+//show user hidden tweet
+app.post('/api/entries/tweets/show/:id', authenticate, showUserTweet );
 //Send public/index.htl to client
 app.get('*/',(req,res) => {
   res.sendFile(path.join(__dirname,'../public/index.html'));

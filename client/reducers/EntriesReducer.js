@@ -3,14 +3,16 @@ import {
   ENTRY_CREATE_ERROR,
   CLEAR_ENTRY_CREATION_STATUS,
   FETCH_ALL_ENTRIES_SUCCESS,
-  FETCH_USER_ENTRIES_SUCCESS
+  FETCH_USER_ENTRIES_SUCCESS,
+  FETCH_TWEETS_SUCCESS
 } from './../actions/types';
 
 const INITIAL_STATE = {
   entrycreatesuccess: false,
   entrycreateerror: false,
   entrieslist : null,
-  userentries: null
+  userentries: null,
+  usertweets: null
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -25,6 +27,8 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, entrieslist: action.payload }
     case FETCH_USER_ENTRIES_SUCCESS:
       return { ...state, userentries: action.payload};
+    case FETCH_TWEETS_SUCCESS:
+      return { ...state, usertweets: action.payload };
     default:
      return state;
   }
